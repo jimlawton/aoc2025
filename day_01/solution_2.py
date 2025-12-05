@@ -18,16 +18,20 @@ def solve(lines):
     print(f"Dial starts at position {current}")
     for rotation in lines:
         rotation = rotation.strip()
+        # print(f"\nDEBUG: Processing rotation: {rotation}")
         direction = rotation[0]
         steps = int(rotation[1:])
+        new = (current + steps) % SIZE
         num_crossings = 0
         if direction == "L":
             # Rotating left
             steps = -steps
             if current + steps < 0:
                 num_crossings = -((current + steps) // SIZE)
+                # print(f"DEBUG: num_crossings={num_crossings}")
                 if current == 0:
-                    num_crossings -= 1 if num_crossings > 0 else 0
+                    num_crossings -= 1
+                    # print(f"DEBUG: num_crossings={num_crossings}")
                 print(
                     f"Crossed zero {num_crossings} times going left: {current} + {steps} < 0"
                 )
@@ -35,14 +39,15 @@ def solve(lines):
             # Rotating right
             if current + steps > SIZE:
                 num_crossings = (current + steps) // SIZE
-                if current == 0:
-                    num_crossings -= 1 if num_crossings > 0 else 0
+                # print(f"DEBUG: num_crossings={num_crossings}")
+                if current == 0 or new == 0:
+                    num_crossings -= 1
+                    # print(f"DEBUG: num_crossings={num_crossings}")
                 print(
                     f"Crossed zero {num_crossings} times going right: {current} + {steps} > {SIZE}"
                 )
         zero_crossings += num_crossings
 
-        new = (current + steps) % SIZE
         if new == 0:
             zero_hits += 1
 
@@ -57,7 +62,7 @@ def test():
     print("\nRunning tests #1...")
     test_data = [["L50", "R50"], ["L50", "L50"], ["R50", "L50"], ["R50", "R50"]]
     for i, test_case in enumerate(test_data):
-        print(f"  Test case {i + 1}:")
+        print(f"\n  Test case {i + 1}:")
         current, zero_hits, zero_crossings = solve(test_case)
         if zero_hits == 1 and zero_crossings == 0:
             print("  PASS")
@@ -70,7 +75,7 @@ def test():
     print("\nRunning tests #2...")
     test_data = [["L150", "L50"], ["L150", "R50"], ["R150", "L50"], ["R150", "R50"]]
     for i, test_case in enumerate(test_data):
-        print(f"  Test case {i + 1}:")
+        print(f"\n  Test case {i + 1}:")
         current, zero_hits, zero_crossings = solve(test_case)
         if zero_hits == 1 and zero_crossings == 1:
             print("  PASS")
