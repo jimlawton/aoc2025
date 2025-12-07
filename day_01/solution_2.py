@@ -12,8 +12,8 @@ SIZE = 100
 
 
 def solve(lines):
-    zero_hits = 0
     current = INITIAL
+    zero_hits = 0
     zero_crossings = 0
     print(f"Dial starts at position {current}")
     for rotation in lines:
@@ -21,11 +21,11 @@ def solve(lines):
         # print(f"\nDEBUG: Processing rotation: {rotation}")
         direction = rotation[0]
         steps = int(rotation[1:])
+        steps = -steps if direction == "L" else steps
         new = (current + steps) % SIZE
         num_crossings = 0
         if direction == "L":
             # Rotating left
-            steps = -steps
             if current + steps < 0:
                 num_crossings = -((current + steps) // SIZE)
                 # print(f"DEBUG: num_crossings={num_crossings}")
