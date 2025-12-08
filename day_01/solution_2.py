@@ -43,30 +43,48 @@ def test():
     fails = 0
 
     print("\nRunning tests #1...")
-    test_data = [["L50", "R50"], ["L50", "L50"], ["R50", "L50"], ["R50", "R50"]]
-    for i, test_case in enumerate(test_data):
+    test_data = [
+        (["L50", "R50"], 1),  # L50: 50->0 (1), R50: 0->50 (0) = 1 total
+        (["L50", "L50"], 1),  # L50: 50->0 (1), L50: 0->50 (0) = 1 total
+        (["R50", "L50"], 1),  # R50: 50->0 (1), L50: 0->50 (0) = 1 total
+        (["R50", "R50"], 1),  # R50: 50->0 (1), R50: 0->50 (0) = 1 total
+    ]
+    for i, (test_case, expected) in enumerate(test_data):
         print(f"\n  Test case {i + 1}:")
-        current, zero_hits, zero_crossings = solve(test_case)
-        if zero_hits == 1 and zero_crossings == 0:
-            print("  PASS")
+        total = solve(test_case)
+        if total == expected:
+            print(f"  PASS (got {total})")
         else:
             fails += 1
-            print(
-                f"  FAIL: Test case expected 1 zero hit and no zero crossing, got {zero_hits}, {zero_crossings}"
-            )
+            print(f"  FAIL: expected {expected}, got {total}")
 
     print("\nRunning tests #2...")
-    test_data = [["L150", "L50"], ["L150", "R50"], ["R150", "L50"], ["R150", "R50"]]
-    for i, test_case in enumerate(test_data):
+    test_data = [
+        (
+            ["L150", "L50"],
+            2,
+        ),  # L150: crosses 0 once + ends at 0, L50: 0->50 (0) = 2 total
+        (
+            ["L150", "R50"],
+            2,
+        ),  # L150: crosses 0 once + ends at 0, R50: 0->50 (0) = 2 total
+        (
+            ["R150", "L50"],
+            2,
+        ),  # R150: crosses 0 once + ends at 0, L50: 0->50 (0) = 2 total
+        (
+            ["R150", "R50"],
+            2,
+        ),  # R150: crosses 0 once + ends at 0, R50: 0->50 (0) = 2 total
+    ]
+    for i, (test_case, expected) in enumerate(test_data):
         print(f"\n  Test case {i + 1}:")
-        current, zero_hits, zero_crossings = solve(test_case)
-        if zero_hits == 1 and zero_crossings == 1:
-            print("  PASS")
+        total = solve(test_case)
+        if total == expected:
+            print(f"  PASS (got {total})")
         else:
             fails += 1
-            print(
-                f"  FAIL: expected 1 zero hit and 1 zero crossing, got {zero_hits}, {zero_crossings}"
-            )
+            print(f"  FAIL: expected {expected}, got {total}")
 
     if fails == 0:
         print("\nAll tests PASS.")
