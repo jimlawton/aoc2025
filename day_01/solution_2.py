@@ -13,47 +13,30 @@ SIZE = 100
 
 def solve(lines):
     current = INITIAL
-    zero_hits = 0
-    zero_crossings = 0
+    total_zeros = 0
+
     print(f"Dial starts at position {current}")
+
     for rotation in lines:
         rotation = rotation.strip()
-        # print(f"\nDEBUG: Processing rotation: {rotation}")
         direction = rotation[0]
         steps = int(rotation[1:])
-        steps = -steps if direction == "L" else steps
-        new = (current + steps) % SIZE
-        num_crossings = 0
-        if direction == "L":
-            # Rotating left
-            if current + steps < 0:
-                num_crossings = -((current + steps) // SIZE)
-                # print(f"DEBUG: num_crossings={num_crossings}")
-                if current == 0:
-                    num_crossings -= 1
-                    # print(f"DEBUG: num_crossings={num_crossings}")
-                print(
-                    f"Crossed zero {num_crossings} times going left: {current} + {steps} < 0"
-                )
-        else:
-            # Rotating right
-            if current + steps > SIZE:
-                num_crossings = (current + steps) // SIZE
-                # print(f"DEBUG: num_crossings={num_crossings}")
-                if current == 0 or new == 0:
-                    num_crossings -= 1
-                    # print(f"DEBUG: num_crossings={num_crossings}")
-                print(
-                    f"Crossed zero {num_crossings} times going right: {current} + {steps} > {SIZE}"
-                )
-        zero_crossings += num_crossings
 
-        if new == 0:
-            zero_hits += 1
+        start_pos = current
 
-        # print(f"Rotated {rotation} from {current} to point at {new}")
-        current = new
-    return current, zero_hits, zero_crossings
+        # Simulate each individual click
+        for _ in range(steps):
+            if direction == "L":
+                current = (current - 1) % SIZE
+            else:  # 'R'
+                current = (current + 1) % SIZE
+
+            if current == 0:
+                total_zeros += 1
+
+        print(f"Rotated {rotation} from {start_pos} to point at {current}")
+
+    return total_zeros
 
 
 def test():
@@ -105,10 +88,8 @@ def main():
     with open(file, "r") as f:
         lines = f.readlines()
 
-    current, zero_hits, zero_crossings = solve(lines)
-    print(f"\nNumber of times dial hit zero: {zero_hits}")
-    print(f"Number of times dial crossed zero: {zero_crossings}")
-    print(f"Total: {zero_hits + zero_crossings}")
+    total_zeros = solve(lines)
+    print(f"\nTotal times dial pointed at zero: {total_zeros}")
 
 
 if __name__ == "__main__":
