@@ -10,18 +10,21 @@ def solve(line):
     line = line.strip()
     # Find the largest two digits in the string, but they must read left to right.
     # E.g. "987654321111111" -> 9 and 8 -> 98
-    first_digit = -1
-    second_digit = -1
-    for char in line:
-        print(first_digit, second_digit)
-        digit = int(char)
-        print(digit)
-        if digit > first_digit:
-            first_digit = digit
-        elif digit > second_digit and digit != first_digit:
-            second_digit = digit
-    if first_digit != -1 and second_digit != -1:
-        answer = first_digit * 10 + second_digit
+    digits = [int(d) for d in line]
+    max_first = max(digits[:-1])
+    first_index = digits.index(max_first)
+    try:
+        if first_index == len(digits) - 2:
+            max_second = digits[-1]
+        else:
+            max_second = max(digits[first_index + 1 :])
+    except Exception as e:
+        print(f"Error processing line: {line}")
+        print(f"  {digits=} {len(digits)=}")
+        print(f"  {max_first=}")
+        print(f"  {first_index=}")
+        raise e
+    answer = max_first * 10 + max_second
     return answer
 
 
@@ -71,7 +74,12 @@ def main():
     with open(file, "r") as f:
         lines = f.readlines()
 
-    _answer = solve(lines)
+    sum = 0
+    for line in lines:
+        answer = solve(line)
+        sum += answer
+        print(f"Answer: {answer}")
+    print(f"Sum of answers: {sum}")
 
 
 if __name__ == "__main__":
